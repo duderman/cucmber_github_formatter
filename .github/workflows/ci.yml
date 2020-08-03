@@ -1,0 +1,43 @@
+name: CI
+
+on: [push]
+
+jobs:
+  rspec:
+    name: RSpec
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+      - uses: actions/checkout@v2
+      - name: Bundler cache
+        uses: actions/cache@v2
+        env:
+          cache-name: bundle-cache
+        with:
+          path: vendor/bundle
+          key: bundler-cache-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: bundler-cache-
+      - name: Install gems
+        run: bundle install
+      - run: bundle exec rspec
+  rubocop:
+    name: Rubocop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+      - uses: actions/checkout@v2
+      - name: Bundler cache
+        uses: actions/cache@v2
+        env:
+          cache-name: bundle-cache
+        with:
+          path: vendor/bundle
+          key: bundler-cache-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: bundler-cache-
+      - name: Install gems
+        run: bundle install
+      - run: bundle exec rubocop
